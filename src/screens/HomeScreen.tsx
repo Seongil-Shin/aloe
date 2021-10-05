@@ -1,14 +1,13 @@
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { RootTabParamList } from "../../types";
+import HomeCantainer from "../home/container/HomeContainer";
 
 type Props = {};
 
-function HomeScreen({}: Props) {
-   return (
-      <View style={styles.container}>
-         <Text>HomeScreen Screen</Text>
-      </View>
-   );
+function HomeScreen(props: BottomTabScreenProps<RootTabParamList, "home">) {
+   return <HomeCantainer {...props} />;
 }
 
 const styles = StyleSheet.create({
