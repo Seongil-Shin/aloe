@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { StyleSheet, View, Animated, Pressable, Text } from "react-native";
 import LottieView from "lottie-react-native";
-import { ViewPager } from "react-native-viewpager-carousel";
 import { Icon } from "react-native-elements";
 import {
    mapMoistureToIcon,
    mapPhToIcon,
    StatusType,
 } from "../../utils/mapStatus";
+import PagerView from "react-native-pager-view";
 
 type Props = {};
 type DataType = { url: string; ph: number; moisture: number };
 
 function Home({}: Props) {
-   const [lottie, setLottie] = useState(new Array(3));
-   const [pressed, setPressed] = useState();
+   const [lottie, setLottie] = useState(new Array(3).fill(10));
+   const [pressed, setPressed] = useState("");
+
+   const statusOpacity = useRef(new Animated.Value(0)).current;
    useEffect(() => {
       const datas: DataType[] = [
          {
@@ -41,7 +43,7 @@ function Home({}: Props) {
             .then(
                (data) =>
                   (array[idx] = {
-                     key: `${idx}`,
+                     key: `status_${idx}`,
                      json: data,
                      ph: item.ph,
                      moisture: item.moisture,
@@ -52,69 +54,93 @@ function Home({}: Props) {
       Promise.all(promises).then(() => setLottie(array));
    }, []);
 
-   const renderPage = ({ data }: { data: any }) => {
-      const phObj: StatusType = mapPhToIcon(data.ph);
-      const moistureObj: StatusType = mapMoistureToIcon(data.moisture);
+   const showStatus = (key: string) => {
+      setPressed(key);
+      statusOpacity.setValue(0);
+      Animated.timing(statusOpacity, {
+         toValue: 1,
+         duration: 1000,
+         useNativeDriver: true,
+      }).start();
+   };
+
+   const renderPage = ({ data, index }: { data: any; index: number }) => {
+      const phObj: StatusType = mapPhToIcon(data?.ph);
+      const moistureObj: StatusType = mapMoistureToIcon(data?.moisture);
       return (
-         <Pressable
-            style={styles.pageContainer}
-            onPress={() => setPressed(data?.key)}>
-            <View style={styles.statusContainer}>
-               {pressed === data?.key ? (
-                  <Animated.View style={[styles.statusView]}>
-                     <View style={styles.singleStatus}>
-                        <Icon
-                           name={phObj?.emoji}
-                           color={phObj?.color}
-                           size={40}
-                        />
-                        <View style={styles.status}>
-                           <Text style={{ fontSize: 36 }}>Ph </Text>
-                           <Text style={{ fontSize: 28 }}>{data.ph}</Text>
-                        </View>
-                     </View>
-                     <View style={styles.singleStatus}>
-                        <Icon
-                           name={moistureObj?.emoji}
-                           color={moistureObj?.color}
-                           size={40}
-                        />
-                        <View style={styles.status}>
-                           <Icon
-                              name={moistureObj?.icon}
-                              color={moistureObj?.color}
-                              type="font-awesome"
-                              size={40}
-                           />
-                           <Text style={{ fontSize: 28 }}>
-                              {data.moisture}%
-                           </Text>
-                        </View>
-                     </View>
+         <View key={index} style={{ flex: 1 }} collapsable={false}>
+            <Pressable
+               style={styles.pageContainer}
+               onPress={() => showStatus(data?.key)}>
+               <View style={styles.statusContainer}>
+                  <Animated.View
+                     style={[styles.statusView, { opacity: statusOpacity }]}>
+                     {pressed === data?.key ? (
+                        <>
+                           <View style={styles.singleStatus}>
+                              <Icon
+                                 name={phObj?.emoji}
+                                 color={phObj?.color}
+                                 size={40}
+                              />
+                              <View style={styles.status}>
+                                 <Text
+                                    style={{
+                                       fontSize: 36,
+                                       color: phObj?.color,
+                                    }}>
+                                    pH
+                                 </Text>
+                                 <Text style={{ fontSize: 28 }}>{data.ph}</Text>
+                              </View>
+                           </View>
+                           <View style={styles.singleStatus}>
+                              <Icon
+                                 name={moistureObj?.emoji}
+                                 color={moistureObj?.color}
+                                 size={40}
+                              />
+                              <View style={styles.status}>
+                                 <Icon
+                                    name={moistureObj?.icon}
+                                    color={moistureObj?.color}
+                                    type="font-awesome"
+                                    size={40}
+                                 />
+                                 <Text style={{ fontSize: 28 }}>
+                                    {data.moisture}%
+                                 </Text>
+                              </View>
+                           </View>
+                        </>
+                     ) : (
+                        <></>
+                     )}
                   </Animated.View>
-               ) : (
-                  <></>
-               )}
-            </View>
-            <View style={styles.lottieContainer}>
-               {data?.json ? (
-                  <LottieView source={data.json} autoPlay loop />
-               ) : (
-                  <></>
-               )}
-            </View>
-         </Pressable>
+               </View>
+               <View style={styles.lottieContainer}>
+                  {data?.json ? (
+                     <LottieView source={data.json} autoPlay loop />
+                  ) : (
+                     <></>
+                  )}
+               </View>
+            </Pressable>
+         </View>
       );
    };
 
    return (
       <View style={styles.container}>
-         <ViewPager
-            data={lottie}
-            renderPage={renderPage}
-            containerStyle={{ flex: 1 }}
-            contentStyle={styles.pageView}
-         />
+         <PagerView style={{ flex: 1 }}>
+            {useMemo(
+               () =>
+                  lottie.map((item, idx) =>
+                     renderPage({ data: item, index: idx })
+                  ),
+               [lottie, pressed]
+            )}
+         </PagerView>
       </View>
    );
 }
