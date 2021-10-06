@@ -10,3 +10,10 @@ export type InstaDataType = {
    image: string[];
    content: string;
 };
+
+export type AlarmDataType = {
+   name: string;
+   type?: string;
+   title: string;
+   subtitle: string;
+};
