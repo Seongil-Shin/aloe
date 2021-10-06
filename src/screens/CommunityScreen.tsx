@@ -1,23 +1,12 @@
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { RootTabParamList } from "../../types";
+import CommunityContainer from "../community/container/CommunityContainer";
 
-type Props = {};
-
-function CommunityScreen({}: Props) {
-   return (
-      <View style={styles.container}>
-         <Text>CommunityScreen Screen</Text>
-      </View>
-   );
+function CommunityScreen(
+   props: BottomTabScreenProps<RootTabParamList, "community">
+) {
+   return <CommunityContainer {...props} />;
 }
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-   },
-});
 
 export default CommunityScreen;
