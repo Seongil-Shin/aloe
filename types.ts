@@ -7,6 +7,6 @@ export type RootTabParamList = {
 export type InstaDataType = {
    avatar: string;
    name: string;
-   image: string;
+   image: string[];
    content: string;
 };

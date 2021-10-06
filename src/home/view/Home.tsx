@@ -7,7 +7,7 @@ import {
    mapPhToIcon,
    StatusType,
 } from "../../utils/mapStatus";
-import PagerView from "react-native-pager-view";
+import Carousel from "pinar";
 
 type Props = {};
 type DataType = { url: string; ph: number; moisture: number };
@@ -132,7 +132,7 @@ function Home({}: Props) {
 
    return (
       <View style={styles.container}>
-         <PagerView style={{ flex: 1 }}>
+         <Carousel>
             {useMemo(
                () =>
                   lottie.map((item, idx) =>
@@ -140,7 +140,7 @@ function Home({}: Props) {
                   ),
                [lottie, pressed]
             )}
-         </PagerView>
+         </Carousel>
       </View>
    );
 }

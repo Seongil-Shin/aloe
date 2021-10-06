@@ -13,7 +13,10 @@ const datas: InstaDataType[] = [
       avatar:
          "https://cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/UEHMTNLTLU2GPM5REEDSORFZXQ.jpg",
       name: "call____meshin",
-      image: "https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/2xEY/image/XwjATX9wymZKOLUUTOf_xtYTWTk.jpg",
+      image: [
+         "https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/2xEY/image/XwjATX9wymZKOLUUTOf_xtYTWTk.jpg",
+         "https://lh3.googleusercontent.com/proxy/opZKRxRMkADegu3sQoxSt_so1rOdsPtZz8hGVlbnxqnYZkPTCafBHdJLoyXB-e2rhfoAjs4lKQ1Nw44DuzVuV1OyWqrz4wJUCDL_oKMMGP5s7OkuJY41fQ",
+      ],
       content:
          "식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아 화분좋아\
     식물좋아 식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아\
@@ -24,7 +27,10 @@ const datas: InstaDataType[] = [
       avatar:
          "https://www.sciencetimes.co.kr/wp-content/uploads/2018/10/fc08a3_ecc89ba4706a4199a9a51be9500037d0mv2_d_1754_2480_s_2.jpg",
       name: "make__meshin32",
-      image: "https://lh3.googleusercontent.com/proxy/opZKRxRMkADegu3sQoxSt_so1rOdsPtZz8hGVlbnxqnYZkPTCafBHdJLoyXB-e2rhfoAjs4lKQ1Nw44DuzVuV1OyWqrz4wJUCDL_oKMMGP5s7OkuJY41fQ",
+      image: [
+         "https://lh3.googleusercontent.com/proxy/opZKRxRMkADegu3sQoxSt_so1rOdsPtZz8hGVlbnxqnYZkPTCafBHdJLoyXB-e2rhfoAjs4lKQ1Nw44DuzVuV1OyWqrz4wJUCDL_oKMMGP5s7OkuJY41fQ",
+         "https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/2xEY/image/XwjATX9wymZKOLUUTOf_xtYTWTk.jpg",
+      ],
       content:
          "식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아 화분좋아\
     식물좋아 식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아\
@@ -34,7 +40,10 @@ const datas: InstaDataType[] = [
    {
       avatar: "https://t1.daumcdn.net/cfile/tistory/997E873B5CD6C1CF14",
       name: "howareyou_shin",
-      image: "https://tgzzmmgvheix1905536.cdn.ntruss.com/2021/01/4dd0305b502d4f7a8f91891d9e4f5371",
+      image: [
+         "https://tgzzmmgvheix1905536.cdn.ntruss.com/2021/01/4dd0305b502d4f7a8f91891d9e4f5371",
+         "https://image.ajunews.com/content/image/2021/04/01/20210401172848819682.jpg",
+      ],
       content:
          "식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아 화분좋아\
     식물좋아 식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아\
@@ -44,7 +53,10 @@ const datas: InstaDataType[] = [
    {
       avatar: "https://t1.daumcdn.net/cfile/tistory/241EA34A57595A2A0F",
       name: "what_the_fuck",
-      image: "https://image.ajunews.com/content/image/2021/04/01/20210401172848819682.jpg",
+      image: [
+         "https://image.ajunews.com/content/image/2021/04/01/20210401172848819682.jpg",
+         "https://tgzzmmgvheix1905536.cdn.ntruss.com/2021/01/4dd0305b502d4f7a8f91891d9e4f5371",
+      ],
       content:
          "식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아 화분좋아\
     식물좋아 식물좋아 식물좋아 화분좋아 식물좋아 식물좋아 식물좋아\
@@ -71,20 +83,16 @@ function Community({}) {
             </ListItem>
             <View style={styles.imageContainer}>
                <Carousel>
-                  <Image
-                     source={{
-                        uri: item.image,
-                     }}
-                     containerStyle={styles.imageContainer}
-                     resizeMode="cover"
-                  />
-                  <Image
-                     source={{
-                        uri: item.image,
-                     }}
-                     containerStyle={styles.imageContainer}
-                     resizeMode="cover"
-                  />
+                  {item.image.map((item, idx) => (
+                     <Image
+                        key={idx}
+                        source={{
+                           uri: item,
+                        }}
+                        containerStyle={styles.imageContainer}
+                        resizeMode="cover"
+                     />
+                  ))}
                </Carousel>
             </View>
             <View style={styles.interfaceContainer}>
@@ -115,6 +123,7 @@ function Community({}) {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+      paddingBottom: 10,
    },
    contentContainer: {
       width: "100%",
