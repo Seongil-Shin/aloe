@@ -9,6 +9,12 @@ import {
 } from "../../utils/mapStatus";
 import Carousel from "pinar";
 
+import { GLView } from "expo-gl";
+import { onContextCreate } from "../webGl";
+import ZSvg from "../zdog/ZSvg";
+import ZBox from "../zdog/ZBox";
+import { windowLayout } from "../../constants/Size";
+
 type Props = {};
 type DataType = { url: string; ph: number; moisture: number };
 
@@ -130,6 +136,11 @@ function Home({}: Props) {
       );
    };
 
+   const canvas = {
+      x: windowLayout.width,
+      y: windowLayout.width,
+      z: windowLayout.width,
+   };
    return (
       <View style={styles.container}>
          <Carousel>
@@ -140,6 +151,33 @@ function Home({}: Props) {
                   ),
                [lottie, pressed]
             )}
+            <View key={4} style={{ flex: 1 }} collapsable={false}>
+               <GLView
+                  style={{
+                     width: "100%",
+                     height: "100%",
+                  }}
+                  onContextCreate={onContextCreate}
+               />
+            </View>
+            <View
+               key={5}
+               style={{ flex: 1, justifyContent: "center" }}
+               collapsable={false}>
+               <ZSvg canvas={canvas}>
+                  <ZBox
+                     width={1.3}
+                     height={0.5}
+                     depth={0.5}
+                     front={"#FFC27A"}
+                     back={"#7EDAB9"}
+                     left={"#45A6E5"}
+                     right={"#FE8777"}
+                     top={"#B97EDA"}
+                     bottom={"#77EEFE"}
+                  />
+               </ZSvg>
+            </View>
          </Carousel>
       </View>
    );
@@ -148,6 +186,8 @@ function Home({}: Props) {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
    },
    pageView: {
       width: "100%",
